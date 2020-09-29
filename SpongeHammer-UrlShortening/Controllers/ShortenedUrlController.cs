@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +41,7 @@ namespace SpongeHammer_UrlShortening.Controllers
                 return NotFound();
             }
 
-            return shortenedUrl;
+            return RedirectPermanentPreserveMethod(shortenedUrl.OriginalUrl);
         }
 
         // POST: api/ShortenedUrl
@@ -48,9 +50,6 @@ namespace SpongeHammer_UrlShortening.Controllers
         [HttpPost]
         public async Task<ActionResult<ShortenedUrl>> PostShortenedUrl(ShortenedUrl shortenedUrl)
         {
-            /**
-            ShortenedUrl shortenedUrl = new ShortenedUrl();
-            shortenedUrl.OriginalUrl = originalUrl;*/
             shortenedUrl.ShortenedLinkId = Guid.NewGuid().ToString();
             _context.ShortenedUrls.Add(shortenedUrl);
             try
@@ -68,6 +67,10 @@ namespace SpongeHammer_UrlShortening.Controllers
                     throw;
                 }
             }
+
+
+            String baseUrl = string.Format("{0}://{1}{2}/", Request.Scheme, Request.Host, Request.Path);
+            shortenedUrl.ShortUrl = baseUrl + shortenedUrl.ShortenedLinkId;
 
             return CreatedAtAction("GetShortenedUrl", new { id = shortenedUrl.ShortenedLinkId }, shortenedUrl);
         }
