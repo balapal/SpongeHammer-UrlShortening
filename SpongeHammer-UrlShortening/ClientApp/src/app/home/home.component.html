@@ -13,7 +13,14 @@
 </div>
 
 <div [hidden]="!submitted">
-  Shortened URL is: {{shortenedUrl.shortUrl}}
-  <br />
-  Original Url: {{shortenedUrl.originalUrl}}
+  <p>
+    <b>Shortened URL is:</b>
+    <br />
+    <a href="{{shortenedUrl.shortUrl}}">{{shortenedUrl.shortUrl}}</a>
+  </p>
+  <p>
+    <b>Original Url: </b>
+    <br />
+    <a href="{{shortenedUrl.originalUrl}}">{{shortenedUrl.originalUrl}}</a>
+  </p>
 </div>
